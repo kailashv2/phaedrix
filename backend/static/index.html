@@ -4,408 +4,565 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Phaedrix</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
   <style>
-    * { margin: 0; padding: 0; box-sizing: border-box; }
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
 
-    body {
-      background: #080810;
-      color: #e2e8f0;
-      font-family: 'Segoe UI', sans-serif;
-      height: 100vh;
-      display: flex;
-      flex-direction: column;
+    :root {
+      --bg: #f9f9f8;
+      --surface: #ffffff;
+      --border: #e8e8e5;
+      --border-focus: #b4b4b0;
+      --text-1: #1c1c1a;
+      --text-2: #6b6b67;
+      --text-3: #a8a8a4;
+      --accent: #7c6ff7;
+      --accent-dim: #eeecfe;
+      --green: #18a86b;
+      --green-dim: #e6f7f0;
+      --amber: #d97706;
+      --amber-dim: #fef8ec;
+      --pink: #db2777;
+      --pink-dim: #fdf0f7;
+      --radius-sm: 8px;
+      --radius-md: 12px;
+      --radius-lg: 16px;
+      --shadow: 0 1px 4px rgba(0,0,0,0.06);
+      --shadow-md: 0 4px 16px rgba(0,0,0,0.08);
     }
 
+    html, body {
+      height: 100%;
+      background: var(--bg);
+      color: var(--text-1);
+      font-family: 'Inter', system-ui, sans-serif;
+      font-size: 14px;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    body { display: flex; flex-direction: column; }
+
     header {
-      padding: 16px 24px;
-      border-bottom: 1px solid #1a1a2e;
+      height: 52px;
+      padding: 0 20px;
       display: flex;
       align-items: center;
       justify-content: space-between;
-      background: #0a0a18;
+      background: var(--surface);
+      border-bottom: 1px solid var(--border);
+      position: sticky;
+      top: 0;
+      z-index: 20;
     }
 
-    .logo {
+    .h-left { display: flex; align-items: center; gap: 10px; }
+
+    .wordmark {
+      font-size: 13px;
+      font-weight: 700;
+      letter-spacing: 2.5px;
+      color: var(--text-1);
+      text-transform: uppercase;
+    }
+
+    .sep { width: 1px; height: 14px; background: var(--border); }
+
+    .status {
       display: flex;
       align-items: center;
-      gap: 10px;
+      gap: 5px;
+      font-size: 11px;
+      font-weight: 500;
+      color: var(--green);
     }
 
-    .logo h1 {
-      font-size: 1.4rem;
-      font-weight: 700;
-      background: linear-gradient(135deg, #6c63ff, #00e5a0);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      letter-spacing: 1px;
+    .status-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--green);
+      animation: pulse-dot 2.5s ease-in-out infinite;
     }
 
-    .live-badge {
-      background: #00e5a0;
-      color: #000;
-      padding: 2px 8px;
-      border-radius: 20px;
-      font-size: 0.65rem;
-      font-weight: 700;
-      letter-spacing: 0.5px;
+    @keyframes pulse-dot {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.5; transform: scale(0.85); }
     }
 
-    .agent-badge {
-      font-size: 0.72rem;
-      color: #6c63ff;
-      background: #6c63ff18;
-      border: 1px solid #6c63ff44;
-      padding: 3px 10px;
-      border-radius: 20px;
+    .active-pill {
       display: none;
+      align-items: center;
+      gap: 5px;
+      padding: 3px 9px;
+      border-radius: 20px;
+      font-size: 11px;
+      font-weight: 600;
     }
 
-    #session-info {
-      font-size: 0.68rem;
-      color: #333;
+    .active-pill-dot { width: 5px; height: 5px; border-radius: 50%; }
+
+    .session-id {
+      font-size: 11px;
+      color: var(--text-3);
+      font-family: 'JetBrains Mono', monospace;
     }
 
     #chat {
       flex: 1;
       overflow-y: auto;
-      padding: 24px;
+      padding: 28px 0 12px;
       display: flex;
       flex-direction: column;
-      gap: 16px;
+      gap: 2px;
     }
 
-    #chat::-webkit-scrollbar { width: 4px; }
-    #chat::-webkit-scrollbar-track { background: transparent; }
-    #chat::-webkit-scrollbar-thumb { background: #1a1a2e; border-radius: 4px; }
+    #chat::-webkit-scrollbar { width: 3px; }
+    #chat::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
 
-    .message {
-      max-width: 80%;
-      padding: 14px 18px;
-      border-radius: 16px;
-      line-height: 1.7;
-      font-size: 0.92rem;
+    .msg-wrap {
+      display: flex;
+      padding: 3px 20px;
+      animation: rise 0.2s ease;
+    }
+
+    @keyframes rise {
+      from { opacity: 0; transform: translateY(5px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    .msg-wrap.user  { justify-content: flex-end; }
+    .msg-wrap.agent { justify-content: flex-start; }
+
+    .bubble {
+      max-width: 74%;
+      padding: 11px 15px;
+      line-height: 1.65;
+      font-size: 14px;
       word-break: break-word;
-      animation: fadeIn 0.3s ease;
     }
 
-    @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(8px); }
-      to { opacity: 1; transform: translateY(0); }
+    .msg-wrap.user .bubble {
+      background: var(--text-1);
+      color: #fff;
+      border-radius: var(--radius-lg) var(--radius-lg) 4px var(--radius-lg);
+      box-shadow: var(--shadow);
     }
 
-    .user {
-      background: linear-gradient(135deg, #6c63ff, #5a52e0);
-      align-self: flex-end;
-      border-radius: 16px 16px 4px 16px;
-      box-shadow: 0 4px 15px #6c63ff33;
+    .msg-wrap.agent .bubble {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 4px var(--radius-lg) var(--radius-lg) var(--radius-lg);
+      box-shadow: var(--shadow);
     }
 
-    .agent {
-      background: #0e0e1e;
-      align-self: flex-start;
-      border-radius: 16px 16px 16px 4px;
-      border: 1px solid #1a1a3a;
-      box-shadow: 0 4px 15px #00000033;
-    }
-
-    .agent-header {
+    .bubble-header {
       display: flex;
       align-items: center;
-      gap: 8px;
+      gap: 7px;
       margin-bottom: 8px;
+      padding-bottom: 8px;
+      border-bottom: 1px solid var(--border);
     }
 
-    .agent-name {
-      color: #6c63ff;
-      font-size: 0.68rem;
+    .bubble-brand {
+      font-size: 10px;
       font-weight: 700;
-      letter-spacing: 0.8px;
+      letter-spacing: 2px;
+      color: var(--text-2);
       text-transform: uppercase;
     }
 
-    .agent-type {
-      color: #00e5a0;
-      font-size: 0.62rem;
-      background: #00e5a011;
-      border: 1px solid #00e5a033;
-      padding: 1px 7px;
-      border-radius: 10px;
+    .agent-chip {
+      font-size: 10px;
+      font-weight: 600;
+      padding: 2px 8px;
+      border-radius: 20px;
+      letter-spacing: 0.2px;
     }
 
-    .thinking {
-      color: #555;
+    .thinking-text {
+      color: var(--text-3);
+      font-size: 13px;
       font-style: italic;
-      animation: pulse 1.5s infinite;
     }
 
-    @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.3} }
+    .welcome-wrap {
+      padding: 32px 20px 20px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      gap: 6px;
+    }
+
+    .welcome-icon {
+      width: 72px;
+      height: 72px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 6px;
+    }
+
+    .welcome-title {
+      font-size: 22px;
+      font-weight: 700;
+      color: var(--text-1);
+      letter-spacing: -0.5px;
+    }
+
+    .welcome-sub {
+      font-size: 14px;
+      color: var(--text-2);
+      max-width: 360px;
+      line-height: 1.55;
+    }
+
+    .agents-row {
+      display: flex;
+      gap: 6px;
+      flex-wrap: wrap;
+      justify-content: center;
+      margin-top: 16px;
+    }
+
+    .agent-chip-lg {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      padding: 6px 12px;
+      border-radius: 20px;
+      border: 1px solid var(--border);
+      background: var(--surface);
+      font-size: 12px;
+      font-weight: 500;
+      color: var(--text-2);
+      box-shadow: var(--shadow);
+    }
+
+    .agent-chip-lg .dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+    }
 
     pre {
-      background: #0d1117;
-      border: 1px solid #30363d;
-      border-radius: 10px;
+      background: #18181b;
+      border-radius: var(--radius-sm);
       padding: 14px;
-      margin-top: 10px;
+      margin: 10px 0;
       overflow-x: auto;
-      font-size: 0.83rem;
-      color: #e6edf3;
+      font-size: 12.5px;
+      color: #e4e4e7;
+      font-family: 'JetBrains Mono', monospace;
+      line-height: 1.6;
       white-space: pre-wrap;
     }
 
-    code { font-family: 'Consolas', 'Courier New', monospace; }
-
-    .suggestions {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 8px;
-      padding: 0 24px 12px;
+    code.ic {
+      background: var(--bg);
+      color: var(--accent);
+      padding: 1px 5px;
+      border-radius: 4px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 12px;
+      border: 1px solid var(--border);
     }
 
-    .suggestion {
-      background: #0e0e1e;
-      border: 1px solid #1a1a3a;
-      color: #888;
-      padding: 6px 14px;
+    strong { font-weight: 600; }
+    em { font-style: italic; color: var(--text-2); }
+    h2,h3,h4 { font-weight: 600; margin: 10px 0 4px; }
+    ul,ol { padding-left: 18px; margin: 6px 0; }
+    li { margin-bottom: 3px; }
+
+    .suggestions-wrap { padding: 0 20px 12px; }
+
+    .suggestions-label {
+      font-size: 10px;
+      font-weight: 600;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      color: var(--text-3);
+      margin-bottom: 8px;
+    }
+
+    .chips { display: flex; flex-wrap: wrap; gap: 6px; }
+
+    .chip {
+      padding: 6px 13px;
       border-radius: 20px;
+      border: 1px solid var(--border);
+      background: var(--surface);
+      font-size: 12px;
+      font-weight: 500;
+      color: var(--text-2);
       cursor: pointer;
-      font-size: 0.78rem;
-      transition: all 0.2s;
+      transition: border-color 0.15s, color 0.15s, background 0.15s;
+      box-shadow: var(--shadow);
     }
 
-    .suggestion:hover {
-      border-color: #6c63ff;
-      color: #e2e8f0;
-      background: #6c63ff11;
+    .chip:hover {
+      border-color: var(--accent);
+      color: var(--accent);
+      background: var(--accent-dim);
     }
 
     #input-area {
-      padding: 16px 24px;
-      border-top: 1px solid #1a1a2e;
-      display: flex;
-      gap: 12px;
-      align-items: flex-end;
-      background: #0a0a18;
+      padding: 10px 20px 18px;
+      background: var(--bg);
     }
+
+    .input-box {
+      background: var(--surface);
+      border: 1.5px solid var(--border);
+      border-radius: var(--radius-lg);
+      box-shadow: var(--shadow-md);
+      overflow: hidden;
+      transition: border-color 0.15s, box-shadow 0.15s;
+    }
+
+    .input-box:focus-within {
+      border-color: var(--border-focus);
+      box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+    }
+
+    .input-top { padding: 13px 16px 4px; }
 
     #input {
-      flex: 1;
-      background: #0e0e1e;
-      border: 1px solid #1a1a3a;
-      color: #e2e8f0;
-      padding: 12px 18px;
-      border-radius: 25px;
-      font-size: 0.92rem;
+      width: 100%;
+      background: transparent;
+      border: none;
       outline: none;
+      font-size: 14px;
+      font-family: 'Inter', sans-serif;
+      color: var(--text-1);
       resize: none;
-      max-height: 120px;
-      transition: border-color 0.2s;
+      max-height: 140px;
+      line-height: 1.55;
     }
 
-    #input:focus { border-color: #6c63ff; }
+    #input::placeholder { color: var(--text-3); }
 
-    #input::placeholder { color: #333; }
+    .input-bottom {
+      padding: 6px 10px 10px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .input-hint { font-size: 11px; color: var(--text-3); }
 
     #send {
-      background: linear-gradient(135deg, #6c63ff, #5a52e0);
+      width: 32px;
+      height: 32px;
+      border-radius: var(--radius-sm);
+      background: var(--text-1);
       border: none;
-      color: #fff;
-      padding: 12px 24px;
-      border-radius: 25px;
       cursor: pointer;
-      font-size: 0.92rem;
-      font-weight: 600;
-      transition: all 0.2s;
-      white-space: nowrap;
-      box-shadow: 0 4px 15px #6c63ff44;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: background 0.15s, transform 0.1s;
+      flex-shrink: 0;
     }
 
-    #send:hover { transform: translateY(-1px); box-shadow: 0 6px 20px #6c63ff55; }
-    #send:disabled { background: #1a1a2e; cursor: not-allowed; box-shadow: none; transform: none; }
-
-    ul { padding-left: 20px; margin: 6px 0; }
-    li { margin-bottom: 4px; }
-    h2,h3,h4 { margin: 10px 0 6px; }
+    #send:hover { background: #333; transform: translateY(-1px); }
+    #send:disabled { background: var(--border); cursor: not-allowed; transform: none; }
+    #send svg { width: 14px; height: 14px; color: #fff; }
   </style>
 </head>
 <body>
-  <header>
-    <div class="logo">
-      <h1>PHAEDRIX</h1>
-      <span class="live-badge">LIVE</span>
-      <span class="agent-badge" id="active-agent"></span>
+
+<header>
+  <div class="h-left">
+    <img src="/static/logo.png" style="width:22px;height:22px;object-fit:contain;" />
+    <span class="wordmark">Phaedrix</span>
+    <div id="active-pill" style="display:none!important;"></div>
+  </div>
+  <span class="session-id" id="session-id"></span>
+</header>
+
+<div id="chat">
+  <div class="welcome-wrap">
+    <div class="welcome-icon">
+      <img src="/static/logo.png" style="width:140px;height:140px;object-fit:contain;" />
     </div>
-    <span id="session-info"></span>
-  </header>
-
-  <div id="chat">
-    <div class="message agent">
-      <div class="agent-header">
-        <span class="agent-name">PHAEDRIX</span>
-        <span class="agent-type">Multi-Agent System</span>
-      </div>
-      Welcome. I am Phaedrix — a multi-agent AI system.<br><br>
-      I route your requests to specialized agents:<br>
-      <strong style="color:#6c63ff">Research Agent</strong> — real-time web search & news<br>
-      <strong style="color:#00e5a0">Code Agent</strong> — write & execute code in any language<br>
-      <strong style="color:#f59e0b">Data Agent</strong> — math, calculations & data analysis<br>
-      <strong style="color:#ec4899">Utility Agent</strong> — weather, currency & time<br><br>
-      What do you need?
+    <div class="welcome-title">What can I help with?</div>
+    <div class="welcome-sub">I route every request to the right specialist — research, code, data, or utilities.</div>
+    <div class="agents-row">
+      <div class="agent-chip-lg"><div class="dot" style="background:#7c6ff7"></div>Research</div>
+      <div class="agent-chip-lg"><div class="dot" style="background:#18a86b"></div>Code</div>
+      <div class="agent-chip-lg"><div class="dot" style="background:#d97706"></div>Data</div>
+      <div class="agent-chip-lg"><div class="dot" style="background:#db2777"></div>Utility</div>
     </div>
   </div>
+</div>
 
-  <div class="suggestions">
-    <div class="suggestion" onclick="sendSuggestion(this)">Latest AI news</div>
-    <div class="suggestion" onclick="sendSuggestion(this)">Write fibonacci in Python</div>
-    <div class="suggestion" onclick="sendSuggestion(this)">Weather in Mumbai</div>
-    <div class="suggestion" onclick="sendSuggestion(this)">100 USD to INR</div>
-    <div class="suggestion" onclick="sendSuggestion(this)">Write a REST API in Java</div>
-    <div class="suggestion" onclick="sendSuggestion(this)">What is quantum computing?</div>
+<div class="suggestions-wrap">
+  <div class="suggestions-label">Suggestions</div>
+  <div class="chips">
+    <div class="chip" onclick="sendSuggestion(this)">Latest AI news</div>
+    <div class="chip" onclick="sendSuggestion(this)">Write fibonacci in Python</div>
+    <div class="chip" onclick="sendSuggestion(this)">Weather in Mumbai</div>
+    <div class="chip" onclick="sendSuggestion(this)">100 USD to INR</div>
+    <div class="chip" onclick="sendSuggestion(this)">Write a REST API in Java</div>
+    <div class="chip" onclick="sendSuggestion(this)">What is quantum computing?</div>
   </div>
+</div>
 
-  <div id="input-area">
-    <textarea id="input" placeholder="Ask Phaedrix anything..." rows="1"></textarea>
-    <button id="send" onclick="sendMessage()">Send &#10148;</button>
+<div id="input-area">
+  <div class="input-box">
+    <div class="input-top">
+      <textarea id="input" rows="1" placeholder="Ask Phaedrix anything..."></textarea>
+    </div>
+    <div class="input-bottom">
+      <span class="input-hint">Enter to send · Shift+Enter for new line</span>
+      <button id="send" onclick="sendMessage()">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <line x1="22" y1="2" x2="11" y2="13"></line>
+          <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
+        </svg>
+      </button>
+    </div>
   </div>
+</div>
 
-  <script>
-    let sessionId = sessionStorage.getItem('phaedrix_session');
-    if (!sessionId) {
-      sessionId = 'px_' + Math.random().toString(36).substr(2, 9);
-      sessionStorage.setItem('phaedrix_session', sessionId);
-    }
-    document.getElementById('session-info').textContent = sessionId.slice(-6);
+<script>
+  const AGENT_THEME = {
+    "Research Agent": { color: "#7c6ff7", bg: "#eeecfe" },
+    "Code Agent":     { color: "#18a86b", bg: "#e6f7f0" },
+    "Data Agent":     { color: "#d97706", bg: "#fef8ec" },
+    "Utility Agent":  { color: "#db2777", bg: "#fdf0f7" },
+    "Phaedrix":       { color: "#7c6ff7", bg: "#eeecfe" },
+    "System":         { color: "#dc2626", bg: "#fee2e2" },
+  };
 
-    // Keep alive ping
-    setInterval(() => fetch('/health').catch(() => {}), 14 * 60 * 1000);
+  let sessionId = sessionStorage.getItem('px_sid');
+  if (!sessionId) {
+    sessionId = 'px_' + Math.random().toString(36).slice(2, 8);
+    sessionStorage.setItem('px_sid', sessionId);
+  }
+  document.getElementById('session-id').textContent = sessionId.slice(-6);
 
-    const chat = document.getElementById('chat');
-    const input = document.getElementById('input');
-    const sendBtn = document.getElementById('send');
-    const activeAgent = document.getElementById('active-agent');
-    const agentBadge = document.querySelector('.agent-badge');
+  setInterval(() => fetch('/health').catch(() => {}), 14 * 60 * 1000);
 
-    input.addEventListener('input', () => {
-      input.style.height = 'auto';
-      input.style.height = Math.min(input.scrollHeight, 120) + 'px';
-    });
+  const chat    = document.getElementById('chat');
+  const input   = document.getElementById('input');
+  const sendBtn = document.getElementById('send');
+  const pill    = document.getElementById('active-pill');
 
-    input.addEventListener('keydown', (e) => {
-      if (e.key === 'Enter' && !e.shiftKey) {
-        e.preventDefault();
-        sendMessage();
-      }
-    });
+  input.addEventListener('input', () => {
+    input.style.height = 'auto';
+    input.style.height = Math.min(input.scrollHeight, 140) + 'px';
+  });
 
-    function sendSuggestion(el) {
-      input.value = el.textContent.trim();
-      sendMessage();
-    }
+  input.addEventListener('keydown', e => {
+    if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); sendMessage(); }
+  });
 
-    function escapeHtml(text) {
-      return text.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
-    }
+  function sendSuggestion(el) {
+    input.value = el.textContent.trim();
+    sendMessage();
+  }
 
-    function formatResponse(text) {
-      text = text.replace(/```(\w+)?\n?([\s\S]*?)```/g, (_, lang, code) => {
-        return '<pre><code>' + escapeHtml(code.trim()) + '</code></pre>';
+  function esc(t) {
+    return t.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+  }
+
+  function fmt(text) {
+    text = text.replace(/```(\w+)?\n?([\s\S]*?)```/g, (_,l,c) =>
+      `<pre><code>${esc(c.trim())}</code></pre>`);
+    text = text.replace(/`([^`]+)`/g, '<code class="ic">$1</code>');
+    text = text.replace(/^### (.+)$/gm, '<h4>$1</h4>');
+    text = text.replace(/^## (.+)$/gm,  '<h3>$1</h3>');
+    text = text.replace(/^# (.+)$/gm,   '<h2>$1</h2>');
+    text = text.replace(/^\s*[-*] (.+)$/gm, '<li>$1</li>');
+    text = text.replace(/(<li>[\s\S]*?<\/li>\s*)+/g, '<ul>$&</ul>');
+    text = text.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+    text = text.replace(/\*([^*]+)\*/g,   '<em>$1</em>');
+    text = text.replace(/\n/g, '<br>');
+    return text;
+  }
+
+  function addUser(msg) {
+    const w = document.createElement('div');
+    w.className = 'msg-wrap user';
+    w.innerHTML = `<div class="bubble">${esc(msg)}</div>`;
+    chat.appendChild(w);
+    chat.scrollTop = chat.scrollHeight;
+  }
+
+  function addAgent(content, agentName, thinking = false) {
+    const theme = AGENT_THEME[agentName] || AGENT_THEME['Phaedrix'];
+    const w = document.createElement('div');
+    w.className = 'msg-wrap agent';
+    w.innerHTML = `
+      <div class="bubble">
+        <div class="bubble-header">
+          <span class="bubble-brand">Phaedrix</span>
+          ${agentName
+            ? `<span class="agent-chip" style="background:${theme.bg};color:${theme.color}">${agentName}</span>`
+            : ''}
+        </div>
+        <div class="${thinking ? 'thinking-text' : ''}">${thinking ? content : fmt(content)}</div>
+      </div>`;
+    chat.appendChild(w);
+    chat.scrollTop = chat.scrollHeight;
+    return w;
+  }
+
+  function setActivePill(agentName) {}
+
+  async function sendMessage() {
+    const msg = input.value.trim();
+    if (!msg || sendBtn.disabled) return;
+
+    addUser(msg);
+    input.value = '';
+    input.style.height = 'auto';
+    sendBtn.disabled = true;
+
+    const thinkRow = addAgent('Thinking...', null, true);
+
+    try {
+      const res  = await fetch('/chat', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ message: msg, session_id: sessionId })
       });
-      text = text.replace(/`([^`]+)`/g, '<code style="background:#1e1e2e;padding:2px 6px;border-radius:4px;font-family:monospace;color:#79c0ff">$1</code>');
-      text = text.replace(/^### (.+)$/gm, '<h4 style="color:#00e5a0;margin:10px 0 4px">$1</h4>');
-      text = text.replace(/^## (.+)$/gm, '<h3 style="color:#6c63ff;margin:12px 0 6px">$1</h3>');
-      text = text.replace(/^# (.+)$/gm, '<h2 style="color:#6c63ff;margin:14px 0 8px">$1</h2>');
-      text = text.replace(/^\s*[-*] (.+)$/gm, '<li style="margin-left:16px;margin-bottom:4px">$1</li>');
-      text = text.replace(/(<li[^>]*>.*?<\/li>\s*)+/gs, '<ul style="margin:6px 0">$&</ul>');
-      text = text.replace(/\*\*(.*?)\*\*/g, '<strong style="color:#e2e8f0">$1</strong>');
-      text = text.replace(/\*([^*]+)\*/g, '<em style="color:#a0aec0">$1</em>');
-      text = text.replace(/\n/g, '<br>');
-      return text;
-    }
+      const data = await res.json();
 
-    const AGENT_COLORS = {
-      "Research Agent": "#6c63ff",
-      "Code Agent": "#00e5a0",
-      "Data Agent": "#f59e0b",
-      "Utility Agent": "#ec4899",
-      "Phaedrix": "#6c63ff",
-      "System": "#ef4444",
-    };
-
-    function addMessage(role, content, agentName = null, isThinking = false) {
-      const div = document.createElement('div');
-      div.className = `message ${role}`;
-      if (role === 'agent') {
-        const color = AGENT_COLORS[agentName] || '#6c63ff';
-        div.innerHTML = `
-          <div class="agent-header">
-            <span class="agent-name" style="color:${color}">PHAEDRIX</span>
-            ${agentName ? `<span class="agent-type" style="color:${color};border-color:${color}44;background:${color}11">${agentName}</span>` : ''}
-          </div>
-          <div class="${isThinking ? 'thinking' : ''}">${isThinking ? content : formatResponse(content)}</div>
-        `;
-      } else {
-        div.textContent = content;
-      }
-      chat.appendChild(div);
-      chat.scrollTop = chat.scrollHeight;
-      return div;
-    }
-
-    async function sendMessage() {
-      const msg = input.value.trim();
-      if (!msg || sendBtn.disabled) return;
-
-      addMessage('user', msg);
-      input.value = '';
-      input.style.height = 'auto';
-      sendBtn.disabled = true;
-
-      const thinkingDiv = addMessage('agent', 'Thinking...', null, true);
-
-      try {
-        const res = await fetch('/chat', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ message: msg, session_id: sessionId })
-        });
-
-        const data = await res.json();
-
-        if (data.session_id) {
-          sessionId = data.session_id;
-          sessionStorage.setItem('phaedrix_session', sessionId);
-        }
-
-        const agentName = data.agent || 'Phaedrix';
-        const color = AGENT_COLORS[agentName] || '#6c63ff';
-
-        activeAgent.textContent = agentName;
-        activeAgent.style.display = 'inline';
-        activeAgent.style.color = color;
-        activeAgent.style.borderColor = color + '44';
-        activeAgent.style.background = color + '11';
-
-        const header = thinkingDiv.querySelector('.agent-header');
-        const agentType = header.querySelector('.agent-type') || document.createElement('span');
-        agentType.className = 'agent-type';
-        agentType.textContent = agentName;
-        agentType.style.cssText = `color:${color};border-color:${color}44;background:${color}11`;
-        if (!header.querySelector('.agent-type')) header.appendChild(agentType);
-
-        const agentNameEl = header.querySelector('.agent-name');
-        agentNameEl.style.color = color;
-
-        thinkingDiv.querySelector('div:last-child').className = '';
-        thinkingDiv.querySelector('div:last-child').innerHTML = formatResponse(data.response);
-
-      } catch (err) {
-        thinkingDiv.querySelector('div:last-child').className = '';
-        thinkingDiv.querySelector('div:last-child').textContent = 'Connection error. Is the server running?';
+      if (data.session_id) {
+        sessionId = data.session_id;
+        sessionStorage.setItem('px_sid', sessionId);
+        document.getElementById('session-id').textContent = sessionId.slice(-6);
       }
 
-      sendBtn.disabled = false;
-      input.focus();
-      chat.scrollTop = chat.scrollHeight;
+      const agentName = data.agent || 'Phaedrix';
+      const theme     = AGENT_THEME[agentName] || AGENT_THEME['Phaedrix'];
+      setActivePill(agentName);
+
+      const header = thinkRow.querySelector('.bubble-header');
+      let chip = header.querySelector('.agent-chip');
+      if (!chip) { chip = document.createElement('span'); chip.className = 'agent-chip'; header.appendChild(chip); }
+      chip.style.background = theme.bg;
+      chip.style.color      = theme.color;
+      chip.textContent      = agentName;
+
+      const body = thinkRow.querySelector('div:last-child');
+      body.className = '';
+      body.innerHTML = fmt(data.response);
+
+    } catch {
+      const body = thinkRow.querySelector('div:last-child');
+      body.className = '';
+      body.textContent = 'Connection error. Is the server running?';
     }
-  </script>
+
+    sendBtn.disabled = false;
+    input.focus();
+    chat.scrollTop = chat.scrollHeight;
+  }
+</script>
 </body>
 </html>
