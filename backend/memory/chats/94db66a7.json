@@ -1,0 +1,56 @@
+{
+  "id": "94db66a7",
+  "title": "100 USD to INR",
+  "created_at": "2026-06-23T16:07:20.925746",
+  "updated_at": "2026-06-23T16:14:59.039390",
+  "messages": [
+    {
+      "role": "user",
+      "content": "100 USD to INR",
+      "agent": null,
+      "timestamp": "2026-06-23T16:07:22.836000"
+    },
+    {
+      "role": "assistant",
+      "content": "100.00 USD = 9,470.00 INR\n(Rate: 1 USD = 94.7000 INR)",
+      "agent": "Utility Agent",
+      "timestamp": "2026-06-23T16:07:22.855471"
+    },
+    {
+      "role": "user",
+      "content": "hiu",
+      "agent": null,
+      "timestamp": "2026-06-23T16:08:03.590845"
+    },
+    {
+      "role": "assistant",
+      "content": "It seems like you might have typed something incorrectly. Could you please rephrase or provide more context so I can better understand and assist you?",
+      "agent": "Phaedrix",
+      "timestamp": "2026-06-23T16:08:03.608103"
+    },
+    {
+      "role": "user",
+      "content": "hi",
+      "agent": null,
+      "timestamp": "2026-06-23T16:09:23.041747"
+    },
+    {
+      "role": "assistant",
+      "content": "Hello. How can I help you today?",
+      "agent": "Phaedrix",
+      "timestamp": "2026-06-23T16:09:23.058748"
+    },
+    {
+      "role": "user",
+      "content": "what is my name",
+      "agent": null,
+      "timestamp": "2026-06-23T16:14:59.016402"
+    },
+    {
+      "role": "assistant",
+      "content": "I don't have that information. You haven't told me your name, and I don't have the ability to access personal data. If you'd like to share your name, I'd be happy to chat with you.",
+      "agent": "Phaedrix",
+      "timestamp": "2026-06-23T16:14:59.039390"
+    }
+  ]
+}

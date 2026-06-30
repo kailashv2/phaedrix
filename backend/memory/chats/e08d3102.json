@@ -1,0 +1,32 @@
+{
+  "id": "e08d3102",
+  "title": "Write fibonacci in Python",
+  "created_at": "2026-06-23T01:06:35.694660",
+  "updated_at": "2026-06-23T01:07:44.866261",
+  "messages": [
+    {
+      "role": "user",
+      "content": "Write fibonacci in Python",
+      "agent": null,
+      "timestamp": "2026-06-23T01:06:39.810769"
+    },
+    {
+      "role": "assistant",
+      "content": "```python\ndef fibonacci(n):\n    \"\"\"\n    Generate the Fibonacci sequence up to the nth number.\n\n    Args:\n        n (int): The number of Fibonacci numbers to generate.\n\n    Returns:\n        list: A list of Fibonacci numbers.\n    \"\"\"\n    if n <= 0:\n        return []\n    elif n == 1:\n        return [0]\n    elif n == 2:\n        return [0, 1]\n    else:\n        fib_sequence = [0, 1]\n        while len(fib_sequence) < n:\n            fib_sequence.append(fib_sequence[-1] + fib_sequence[-2])\n        return fib_sequence\n\ndef main():\n    n = 10  # Change this to generate a different number of Fibonacci numbers\n    print(f\"The first {n} Fibonacci numbers are: {fibonacci(n)}\")\n\nmain()\n```\n\n**Output:**\n```\nOutput:\nThe first 10 Fibonacci numbers are: [0, 1, 1, 2, 3, 5, 8, 13, 21, 34]\n\n```",
+      "agent": "Code Agent",
+      "timestamp": "2026-06-23T01:06:39.822812"
+    },
+    {
+      "role": "user",
+      "content": "my name is kailash",
+      "agent": null,
+      "timestamp": "2026-06-23T01:07:44.854232"
+    },
+    {
+      "role": "assistant",
+      "content": "Hello Kailash, it's nice to meet you. Is there something I can help you with or would you like to chat?",
+      "agent": "Phaedrix",
+      "timestamp": "2026-06-23T01:07:44.866261"
+    }
+  ]
+}

@@ -4,9 +4,11 @@ from fastapi.responses import FileResponse
 from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel
 from backend.agents.supervisor import run
+from backend.memory.chat_store import (
+    create_session, save_message, get_chat, list_chats, delete_chat
+)
 from dotenv import load_dotenv
 import os
-import uuid
 
 load_dotenv()
 
@@ -42,9 +44,11 @@ def root():
 
 @app.post("/chat", response_model=ChatResponse)
 async def chat(request: ChatRequest):
-    session_id = request.session_id or str(uuid.uuid4())
+    session_id = request.session_id or create_session()
     try:
         result = run(session_id, request.message)
+        save_message(session_id, "user", request.message)
+        save_message(session_id, "assistant", result["response"], result["agent"])
         return ChatResponse(
             response=result["response"],
             agent=result["agent"],
@@ -60,9 +64,31 @@ async def chat(request: ChatRequest):
         )
 
 
+@app.get("/chats")
+def get_all_chats():
+    return list_chats()
+
+
+@app.get("/chats/{session_id}")
+def get_chat_history(session_id: str):
+    chat = get_chat(session_id)
+    if not chat:
+        return {"error": "Chat not found"}
+    return chat
+
+
+@app.delete("/chats/{session_id}")
+def remove_chat(session_id: str):
+    success = delete_chat(session_id)
+    return {"success": success}
+
+
+@app.post("/chats/new")
+def new_chat():
+    session_id = create_session()
+    return {"session_id": session_id}
+
+
 @app.get("/health")
 def health():
-    return {
-        "status": "Phaedrix is running",
-        "agents": ["Research Agent", "Code Agent", "Data Agent", "Utility Agent"]
-    }
+    return {"status": "Phaedrix running"}

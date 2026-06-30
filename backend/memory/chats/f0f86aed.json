@@ -1,0 +1,20 @@
+{
+  "id": "f0f86aed",
+  "title": "Latest AI news",
+  "created_at": "2026-06-23T16:03:54.099503",
+  "updated_at": "2026-06-23T16:04:00.922405",
+  "messages": [
+    {
+      "role": "user",
+      "content": "Latest AI news",
+      "agent": null,
+      "timestamp": "2026-06-23T16:04:00.907207"
+    },
+    {
+      "role": "assistant",
+      "content": "According to recent news, the latest developments in AI include:\n\n* SpaceX renting Nvidia chips to Reflection AI on the Colossus 2 supercomputer (Source: The Rundown AI on X)\n* Oracle cutting 21,000 jobs as it embraces AI (Source: BBC News)\n* AI potentially flagging issues with council homes sooner (Source: BBC News)\n* Half of London firms reporting skills gap amid AI boom (Source: BBC News)\n* A HR consultant winning an English court case using an AI lawyer in an apparent legal first (Source: The Guardian)\n\nThese updates are based on the latest news articles from reputable sources such as BBC News, The Guardian, and Forbes.",
+      "agent": "Research Agent",
+      "timestamp": "2026-06-23T16:04:00.922405"
+    }
+  ]
+}

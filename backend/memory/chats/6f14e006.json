@@ -1,0 +1,20 @@
+{
+  "id": "6f14e006",
+  "title": "Latest AI news",
+  "created_at": "2026-06-30T15:13:45.286370",
+  "updated_at": "2026-06-30T15:13:53.821987",
+  "messages": [
+    {
+      "role": "user",
+      "content": "Latest AI news",
+      "agent": null,
+      "timestamp": "2026-06-30T15:13:53.804529"
+    },
+    {
+      "role": "assistant",
+      "content": "According to The New York Times, the latest AI news includes the development of new AI technologies, such as AI chatbots and AI-powered tools for tasks like writing and design. Additionally, there are concerns about the impact of AI on employment and the potential for AI to replace human workers. Some experts believe that AI will augment human capabilities, while others are more skeptical about its benefits. \n\nSources:\n- https://www.nytimes.com/spotlight/artificial-intelligence\n- https://ai.economictimes.com \n- https://www.theguardian.com/technology/artificialintelligenceai",
+      "agent": "Research Agent",
+      "timestamp": "2026-06-30T15:13:53.821987"
+    }
+  ]
+}

@@ -1,0 +1,20 @@
+{
+  "id": "2bed37b1",
+  "title": "Weather in Mumbai",
+  "created_at": "2026-06-23T01:08:41.742634",
+  "updated_at": "2026-06-23T01:08:43.562564",
+  "messages": [
+    {
+      "role": "user",
+      "content": "Weather in Mumbai",
+      "agent": null,
+      "timestamp": "2026-06-23T01:08:43.549580"
+    },
+    {
+      "role": "assistant",
+      "content": "Weather in Ballard Estate, India:\nTemperature: 28C (feels like 34C)\nCondition: Mist\nHumidity: 84%\nWind: 17 km/h",
+      "agent": "Utility Agent",
+      "timestamp": "2026-06-23T01:08:43.562564"
+    }
+  ]
+}
