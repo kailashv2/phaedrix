@@ -8,3 +8,4 @@ dist/
 build/
 .DS_Store
 "@ | Out-File -Encoding utf8 .gitignore
+backend/memory/chats/*.json
