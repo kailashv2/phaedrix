@@ -1,8 +1,9 @@
-from fastapi import FastAPI
+from fastapi import FastAPI, Header
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import FileResponse
 from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel
+from typing import Optional
 from backend.agents.supervisor import run
 from backend.memory.chat_store import (
     create_session, save_message, get_chat, list_chats, delete_chat
@@ -43,8 +44,11 @@ def root():
 
 
 @app.post("/chat", response_model=ChatResponse)
-async def chat(request: ChatRequest):
-    session_id = request.session_id or create_session()
+async def chat(request: ChatRequest, x_client_id: Optional[str] = Header(None, alias="X-Client-Id")):
+    if not x_client_id:
+        return ChatResponse(response="Missing client identity.", agent="System", session_id="", success=False)
+
+    session_id = request.session_id or create_session(x_client_id)
     try:
         result = run(session_id, request.message)
         save_message(session_id, "user", request.message)
@@ -65,27 +69,31 @@ async def chat(request: ChatRequest):
 
 
 @app.get("/chats")
-def get_all_chats():
-    return list_chats()
+def get_all_chats(x_client_id: Optional[str] = Header(None, alias="X-Client-Id")):
+    if not x_client_id:
+        return []
+    return list_chats(x_client_id)
 
 
 @app.get("/chats/{session_id}")
-def get_chat_history(session_id: str):
-    chat = get_chat(session_id)
+def get_chat_history(session_id: str, x_client_id: Optional[str] = Header(None, alias="X-Client-Id")):
+    chat = get_chat(session_id, x_client_id or "")
     if not chat:
         return {"error": "Chat not found"}
     return chat
 
 
 @app.delete("/chats/{session_id}")
-def remove_chat(session_id: str):
-    success = delete_chat(session_id)
+def remove_chat(session_id: str, x_client_id: Optional[str] = Header(None, alias="X-Client-Id")):
+    success = delete_chat(session_id, x_client_id or "")
     return {"success": success}
 
 
 @app.post("/chats/new")
-def new_chat():
-    session_id = create_session()
+def new_chat(x_client_id: Optional[str] = Header(None, alias="X-Client-Id")):
+    if not x_client_id:
+        return {"error": "Missing client identity"}
+    session_id = create_session(x_client_id)
     return {"session_id": session_id}
 
 
