@@ -1,7 +1,6 @@
 <div align="center">
 
-# <picture><source media="(prefers-color-scheme: dark)" srcset="logo-dark.png"><img src="logo.png" width="200" valign="middle"></picture> Phaedrix
-
+# <picture><source media="(prefers-color-scheme: dark)" srcset="logo-dark.png"><img src="logo.png" width="110" valign="middle"></picture>Phaedrix
 **A multi-agent AI system with intelligent routing and automatic LLM fallback.**
 
 [![Python](https://img.shields.io/badge/Python-3.12-3776AB?logo=python&logoColor=white)](https://www.python.org/)
