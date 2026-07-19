@@ -12,10 +12,11 @@ def _chat_path(session_id: str) -> Path:
     return CHATS_DIR / f"{session_id}.json"
 
 
-def create_session() -> str:
+def create_session(client_id: str) -> str:
     session_id = str(uuid.uuid4())[:8]
     meta = {
         "id": session_id,
+        "client_id": client_id,
         "title": "New Chat",
         "created_at": datetime.now().isoformat(),
         "updated_at": datetime.now().isoformat(),
@@ -29,7 +30,7 @@ def create_session() -> str:
 def save_message(session_id: str, role: str, content: str, agent: str = None):
     path = _chat_path(session_id)
     if not path.exists():
-        create_session()
+        return
 
     with open(path, "r") as f:
         chat = json.load(f)
@@ -49,19 +50,24 @@ def save_message(session_id: str, role: str, content: str, agent: str = None):
         json.dump(chat, f, indent=2)
 
 
-def get_chat(session_id: str) -> dict:
+def get_chat(session_id: str, client_id: str) -> dict:
     path = _chat_path(session_id)
     if not path.exists():
         return None
     with open(path, "r") as f:
-        return json.load(f)
+        chat = json.load(f)
+    if chat.get("client_id") != client_id:
+        return None
+    return chat
 
 
-def list_chats() -> list:
+def list_chats(client_id: str) -> list:
     chats = []
     for file in sorted(CHATS_DIR.glob("*.json"), key=os.path.getmtime, reverse=True):
         with open(file, "r") as f:
             chat = json.load(f)
+            if chat.get("client_id") != client_id:
+                continue
             chats.append({
                 "id": chat["id"],
                 "title": chat["title"],
@@ -71,9 +77,13 @@ def list_chats() -> list:
     return chats
 
 
-def delete_chat(session_id: str) -> bool:
+def delete_chat(session_id: str, client_id: str) -> bool:
     path = _chat_path(session_id)
-    if path.exists():
-        path.unlink()
-        return True
-    return False
+    if not path.exists():
+        return False
+    with open(path, "r") as f:
+        chat = json.load(f)
+    if chat.get("client_id") != client_id:
+        return False
+    path.unlink()
+    return True
