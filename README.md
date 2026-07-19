@@ -1,8 +1,6 @@
 <div align="center">
 
-<img src="logo.png" width="88" alt="Phaedrix logo" />
-
-# Phaedrix
+# <picture><source media="(prefers-color-scheme: dark)" srcset="logo-dark.png"><img src="logo.png" width="200" valign="middle"></picture> Phaedrix
 
 **A multi-agent AI system with intelligent routing and automatic LLM fallback.**
 
@@ -15,7 +13,6 @@
 [**Live Demo**](https://phaedrix.onrender.com) · [Report a Bug](https://github.com/kailashv2/phaedrix/issues) · [Request a Feature](https://github.com/kailashv2/phaedrix/issues)
 
 </div>
-
 ---
 
 ## Overview
